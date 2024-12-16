@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS education;
+
 USE education;
 
 CREATE TABLE city
