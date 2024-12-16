@@ -5,7 +5,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_HOST: '%'
-      MYSQL_DATABASE: demo
+      MYSQL_DATABASE: education
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       LANG: C.UTF-8
