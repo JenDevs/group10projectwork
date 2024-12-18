@@ -14,8 +14,8 @@
         <properties>
             <!-- Database connection settings -->
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/education"/>
-            <property name="jakarta.persistence.jdbc.user" value="user"/>
-            <property name="jakarta.persistence.jdbc.password" value="password"/>
+            <property name="jakarta.persistence.jdbc.user" value="root"/>
+            <property name="jakarta.persistence.jdbc.password" value="root"/>
             <!-- Automatically export the schema -->
             <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
             <!-- Echo all executed SQL to console -->
