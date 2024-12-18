@@ -41,4 +41,12 @@ public class Course {
         this.courseSchoolId = courseSchool;
     }
 
+    @Override
+    public String toString() {
+        return "Course{" +
+                "courseId=" + courseId +
+                ", courseName='" + courseName + '\'' +
+                ", courseSchoolId=" + courseSchoolId +
+                '}';
+    }
 }

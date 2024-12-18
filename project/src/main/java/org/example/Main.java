@@ -24,37 +24,35 @@ public class Main {
         StudentCRUD studentMenu = new StudentCRUD();
 
 
-        menu.showMainMenu();
         boolean isRunning = true;
         while (isRunning) {
             try {
-                System.out.println();
-                // menyklassen
-                System.out.println("Gör ett val");
+                menu.showMainMenu();
+                System.out.println("Make a choice");
                 int choice = scanner.nextInt();
 
                 scanner.nextLine();
                 switch (choice) {
                     case 0:
-                        System.out.println("Avslutar");
+                        System.out.println("Exiting");
                         isRunning = false;
                         break;
                     case 1: cityMenu.cityCRUDMenu();
                         break;
-                    case 2: courseMenu.courseCRUDMenu();
+                    case 2: schoolMenu.schoolCRUDMenu();
                         break;
-                    case 3: examMenu.examCRUDMenu();
+                    case 3: courseMenu.courseCRUDMenu();
                         break;
-                    case 4: schoolMenu.schoolCRUDMenu();
+                    case 4: studentMenu.studentCRUDMenu();
                         break;
-                    case 5: studentMenu.studentCRUDMenu();
+                    case 5: examMenu.examCRUDMenu();
                     default:
-                        System.out.println("Felaktigt val, försök igen");
+                        System.out.println("Invalid choice, please try again");
                         break;
                 }
 
             } catch (InputMismatchException e) {
-                System.out.println("Felaktig inmatning, bara heltal är giltiga val");
+                System.out.println("Invalid input, only integers are valid choices");
             }
         }
 

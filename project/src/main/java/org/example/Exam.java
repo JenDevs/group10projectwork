@@ -52,4 +52,13 @@ public class Exam {
         this.examStudentId = examStudent;
     }
 
+    @Override
+    public String toString() {
+        return "Exam{" +
+                "examId=" + examId +
+                ", examName='" + examName + '\'' +
+                ", examRating=" + examRating +
+                ", examStudentId=" + examStudentId +
+                '}';
+    }
 }
