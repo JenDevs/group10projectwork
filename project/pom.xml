@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jpa</artifactId>
+    <artifactId>project</artifactId>
 
     <properties>
         <maven.compiler.release>23</maven.compiler.release>

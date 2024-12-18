@@ -5,6 +5,11 @@
     <persistence-unit name="jpa-hibernate-mysql">
 
         <class>org.example.Country</class>
+        <class>org.example.City</class>
+        <class>org.example.Course</class>
+        <class>org.example.Exam</class>
+        <class>org.example.School</class>
+        <class>org.example.Student</class>
 
         <properties>
             <!-- Database connection settings -->
