@@ -37,11 +37,11 @@ public class CityCRUD {
                     case 0:
                         inSubMenu = false;
                         break;
-                    case 1:
+                    case 1: cityInsert();
                         break;
                     case 2:citySelect();
                         break;
-                    case 3:
+                    case 3: updateCity();
                         break;
                     case 4: deleteCity();
                         break;
@@ -58,6 +58,22 @@ public class CityCRUD {
 
     }
 
+    public void cityInsert() {
+        City city = new City();
+        System.out.println("Inter the city name");
+        String cityName = scanner.nextLine();
+        city.setCityName(cityName);
+        int cityId = scanner.nextInt();
+        city.setCityId(cityId);
+
+        JPAUtil.inTransaction(entityManager ->  {
+            entityManager.persist(city);
+        });
+
+    }
+
+
+
     public void citySelect(){
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -70,9 +86,10 @@ public class CityCRUD {
 
     }
 
-    // show
+    private void updateCity() {
 
-    // update
+    }
+
 
     // Raderar stad med ID.
     public void deleteCity(){
