@@ -37,9 +37,9 @@ public class CityCRUD {
                     case 0:
                         inSubMenu = false;
                         break;
-                    case 1: citySelect();
+                    case 1:
                         break;
-                    case 2:
+                    case 2:citySelect();
                         break;
                     case 3:
                         break;
