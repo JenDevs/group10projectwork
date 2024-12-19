@@ -1,6 +1,7 @@
 package org.example;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Id;
 import jakarta.persistence.TypedQuery;
 
 import java.util.InputMismatchException;
@@ -28,11 +29,10 @@ public class CityCRUD {
         boolean inSubMenu = true;
         while (inSubMenu) {
             try {
-                System.out.println();
                 System.out.println("Make a choice");
                 int choice = scanner.nextInt();
-
                 scanner.nextLine();
+
                 switch (choice) {
                     case 0:
                         inSubMenu = false;
@@ -41,7 +41,7 @@ public class CityCRUD {
                         break;
                     case 2:citySelect();
                         break;
-                    case 3: updateCity();
+                    case 3: cityUpdate();
                         break;
                     case 4: deleteCity();
                         break;
@@ -53,6 +53,7 @@ public class CityCRUD {
 
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input, only integers are valid choices");
+                scanner.nextLine();
             }
         }
 
@@ -63,6 +64,7 @@ public class CityCRUD {
         System.out.println("Inter the city name");
         String cityName = scanner.nextLine();
         city.setCityName(cityName);
+        System.out.println("Insert the city ID");
         int cityId = scanner.nextInt();
         city.setCityId(cityId);
 
@@ -86,25 +88,46 @@ public class CityCRUD {
 
     }
 
-    private void updateCity() {
-
-    }
-
-
-    // Raderar stad med ID.
-    public void deleteCity(){
-        System.out.println("Enter the ID of the city to delete");
-        int cityID = scanner.nextInt();
+    public void cityUpdate () {
+        System.out.println("Vilken stad vill du uppdatera?");
+        String oldCityName = scanner.nextLine();
 
         JPAUtil.inTransaction(em -> {
-            City city = em.find(City.class, cityID);
+            City city = em.createQuery("SELECT c FROM City c WHERE c.cityName = :cityName", City.class )
+                    .setParameter("cityName", oldCityName)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
             if (city != null) {
-                em.remove(city);
-
-                System.out.println(City.class.getSimpleName() + " with ID " + cityID + " deleted." );
+                System.out.println("Ange nytt namn för staden");
+                String newCityName = scanner.nextLine();
+                city.setCityName(newCityName);
+                System.out.println(City.class.getSimpleName() + " with name " + oldCityName + " updated");
             } else {
-                System.out.println(City.class.getSimpleName() + " with ID " + cityID + " not found.");
+                System.out.println(City.class.getSimpleName() + " with name " + oldCityName + " not found");
             }
         });
     }
+
+
+    public void deleteCity(){
+        System.out.println("Enter the name of the city you want to delete");
+        String cityName = scanner.nextLine();
+
+        JPAUtil.inTransaction(em -> {
+            City city = em.createQuery("SELECT c FROM City c WHERE c.cityName = :cityName", City.class )
+                    .setParameter("cityName", cityName)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+            if (city != null) {
+                em.remove(city);
+
+                System.out.println(City.class.getSimpleName() + " with name " + cityName + " deleted." );
+            } else {
+                System.out.println(City.class.getSimpleName() + " with name " + cityName + " not found.");
+            }
+        });
+    }
+
 }
