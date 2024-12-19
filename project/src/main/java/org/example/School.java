@@ -43,10 +43,6 @@ public class School {
 
     @Override
     public String toString() {
-        return "School{" +
-                "schoolId=" + schoolId +
-                ", schoolName='" + schoolName + '\'' +
-                ", schoolCityId=" + schoolCityId +
-                '}';
+        return schoolName;
     }
 }
