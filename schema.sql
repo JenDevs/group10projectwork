@@ -143,7 +143,7 @@ VALUES
 INSERT INTO exam (examName, examRating, examStudentId)
 VALUES
     -- Prov för Alice
-    ('Mathematics Exam', 85, 1),
+    ('Mathematics Exam', 20, 1),
 
     -- Prov för Bob
     ('History Exam', 78, 2),
@@ -152,10 +152,10 @@ VALUES
     ('Physics Exam', 88, 3),
 
     -- Prov för David
-    ('Mathematics Exam', 95, 4),
+    ('Mathematics Exam', 76, 4),
 
     -- Prov för Eva
-    ('Philosophy Exam', 76, 5),
+    ('Philosophy Exam', 60, 5),
 
     -- Prov för Freddie
     ('Sociology Exam', 80, 6),
@@ -170,4 +170,83 @@ VALUES
     ('Economics Exam', 91, 9),
 
     -- Prov för Jack
-    ('Geography Exam', 87, 10);
+    ('Geography Exam', 45, 10);
+
+
+INSERT INTO student(studentName, studentBirthday, studentGender, studentCourseId)
+VALUES
+    -- Nya elever för Mathematics (courseId = 1)
+    ('Lina Larsson', '2005-02-14', 'Female', 1),
+    ('Mikael Månsson', '2004-10-10', 'Male', 1),
+
+    -- Nya elever för History (courseId = 2)
+    ('Nina Nilsson', '2005-06-18', 'Female', 2),
+
+    -- Nya elever för Philosophy (courseId = 4)
+    ('Oscar Olsson', '2004-03-02', 'Male', 4),
+
+    -- Nya elever för Geography (courseId = 8)
+    ('Paula Pettersson', '2003-11-22', 'Female', 8),
+
+    -- Nya elever för Music (courseId = 10)
+    ('Rickard Rasmusson', '2004-01-29', 'Male', 10),
+    ('Sara Svensson', '2005-07-04', 'Female', 10);
+
+
+INSERT INTO exam (examName, examRating, examStudentId)
+VALUES
+    -- Prov för Lina och Mikael i Mathematics
+    ('Mathematics Exam', 82, 11),
+    ('Mathematics Exam', 74, 12),
+
+    -- Prov för Nina i History
+    ('History Exam', 76, 13),
+
+    -- Prov för Oscar i Philosophy
+    ('Philosophy Exam', 79, 14),
+
+    -- Prov för Paula i Geography
+    ('Geography Exam', 84, 15),
+
+    -- Prov för Rickard och Sara i Music
+    ('Music Exam', 92, 16),
+    ('Music Exam', 50, 17);
+
+
+
+-- Antal examiner per skola
+SELECT schoolName, COUNT(examId) AS numberOfExams
+FROM school
+         JOIN course ON school.schoolId = course.courseSchoolId
+         JOIN student ON course.courseID = student.studentCourseId
+         JOIN exam ON student.studentId = exam.examStudentId
+GROUP BY schoolName;
+
+
+-- Fördelning av betygskategorier
+SELECT
+    CASE
+        WHEN examRating BETWEEN 0 AND 50 THEN '0-50'
+        WHEN examRating BETWEEN 51 AND 75 THEN '51-75'
+        WHEN examRating BETWEEN 76 AND 100 THEN '76-100'
+        END AS ratingCategory,
+    COUNT(examId) AS numberOfExams
+FROM exam
+GROUP BY ratingCategory;
+
+
+-- Topp 3 elever med högsta genomsnittliga betyg
+SELECT studentName, ROUND(AVG(examRating) ,0) AS averageRating
+FROM student
+         JOIN exam ON student.studentId = exam.examStudentId
+GROUP BY studentName
+ORDER BY averageRating DESC
+LIMIT 3;
+
+
+-- Högsta och lägsta betyg per kurs
+SELECT courseName, MAX(examRating) AS highestRating, MIN(examRating) AS lowestRating
+FROM course
+         JOIN student ON course.courseID = student.studentCourseId
+         JOIN exam ON student.studentId = exam.examStudentId
+GROUP BY courseName;
