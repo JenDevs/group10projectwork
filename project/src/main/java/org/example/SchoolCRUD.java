@@ -58,8 +58,8 @@ public class SchoolCRUD {
         School school = new School();
 
         System.out.println("Inter the school name");
-        String SchoolName = scanner.nextLine();
-        school.setSchoolName(SchoolName);
+        String schoolName = scanner.nextLine();
+        school.setSchoolName(schoolName);
 
         System.out.println("Inter the city Id");
         int cityId = scanner.nextInt();
@@ -70,7 +70,7 @@ public class SchoolCRUD {
                 school.setSchoolCityId(city);
 
                 em.persist(school);
-                System.out.println("School " + SchoolName + " added.");
+                System.out.println("School " + schoolName + " added.");
             } else {
                 System.out.println("City with id = " + cityId + " not exists");
             }
@@ -113,8 +113,6 @@ public class SchoolCRUD {
         });
     }
 
-
-    // Raderar stad med ID.
     public void deleteSchool(){
         System.out.println("Enter the ID of the school to delete");
         int schoolID = scanner.nextInt();
