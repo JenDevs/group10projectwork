@@ -1,7 +1,6 @@
 package org.example;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Id;
 import jakarta.persistence.TypedQuery;
 
 import java.util.InputMismatchException;
@@ -15,7 +14,10 @@ public class CityCRUD {
     // meny för att välja vilken CRUD, menyn kan användas för alla tabeller, genom att
     public void cityCRUDMenu(){
 
-        System.out.printf("""
+        boolean inSubMenu = true;
+        while (inSubMenu) {
+            try {
+                System.out.printf("""
                 Menu
                 ========
                 0. Go back to main menu
@@ -24,11 +26,6 @@ public class CityCRUD {
                 3. Update a city
                 4. Delete a city
                 %n""");
-
-
-        boolean inSubMenu = true;
-        while (inSubMenu) {
-            try {
                 System.out.println("Make a choice");
                 int choice = scanner.nextInt();
                 scanner.nextLine();
@@ -39,7 +36,7 @@ public class CityCRUD {
                         break;
                     case 1: cityInsert();
                         break;
-                    case 2:citySelect();
+                    case 2: citySelect();
                         break;
                     case 3: cityUpdate();
                         break;
@@ -56,24 +53,21 @@ public class CityCRUD {
                 scanner.nextLine();
             }
         }
-
     }
 
     public void cityInsert() {
         City city = new City();
-        System.out.println("Inter the city name");
+
+        System.out.println("Enter the city name");
         String cityName = scanner.nextLine();
         city.setCityName(cityName);
-        System.out.println("Insert the city ID");
-        int cityId = scanner.nextInt();
-        city.setCityId(cityId);
+
 
         JPAUtil.inTransaction(entityManager ->  {
             entityManager.persist(city);
         });
 
     }
-
 
 
     public void citySelect(){
@@ -85,11 +79,10 @@ public class CityCRUD {
         cytis.forEach(System.out::println);
 
         em.close();
-
     }
 
     public void cityUpdate () {
-        System.out.println("Vilken stad vill du uppdatera?");
+        System.out.println("Which city would you like to update?");
         String oldCityName = scanner.nextLine();
 
         JPAUtil.inTransaction(em -> {
@@ -99,7 +92,7 @@ public class CityCRUD {
                     .findFirst()
                     .orElse(null);
             if (city != null) {
-                System.out.println("Ange nytt namn för staden");
+                System.out.println("Enter a new name for the city");
                 String newCityName = scanner.nextLine();
                 city.setCityName(newCityName);
                 System.out.println(City.class.getSimpleName() + " with name " + oldCityName + " updated");

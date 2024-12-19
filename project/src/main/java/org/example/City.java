@@ -1,13 +1,14 @@
 package org.example;
 
 import jakarta.persistence.*;
+import org.w3c.dom.ls.LSOutput;
 
 @Entity
 @Table(name = "city", schema = "education")
 public class City {
     @Id
     @Column(name = "cityId", nullable = false)
-    private Integer cityId;
+    private int cityId;
 
     @Column(name = "cityName")
     private String cityName;
@@ -16,7 +17,7 @@ public class City {
         return cityId;
     }
 
-    public void setCityId(Integer cityId) {
+    public void setCityId(int cityId) {
         this.cityId = cityId;
     }
 
@@ -30,9 +31,6 @@ public class City {
 
     @Override
     public String toString() {
-        return "City{" +
-                "cityId=" + cityId +
-                ", cityName='" + cityName + '\'' +
-                '}';
+        return cityName;
     }
 }
