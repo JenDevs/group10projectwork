@@ -83,6 +83,8 @@ VALUES
     ('ProCivitas Privata Gymnasium Malmö', 4),
     ('Malmö Latin', 4);
 
+INSERT INTO course(courseName, courseSchoolId)
+VALUES ('kivi', 2);
 
 INSERT INTO course(courseName, courseSchoolId)
 VALUES
