@@ -2,6 +2,8 @@ package org.example;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "school", schema = "education")
 public class School {
@@ -16,6 +18,9 @@ public class School {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schoolCityId")
     private City schoolCityId;
+
+    @OneToMany(mappedBy = "courseSchoolId", cascade = CascadeType.REMOVE)
+    private List<Course> courses;
 
     public Integer getSchoolId() {
         return schoolId;

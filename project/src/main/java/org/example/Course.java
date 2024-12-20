@@ -19,7 +19,7 @@ public class Course {
     @JoinColumn(name = "courseSchoolId")
     private School courseSchoolId;
 
-    @OneToMany(mappedBy = "studentCourseId")
+    @OneToMany(mappedBy = "studentCourseId", cascade = CascadeType.REMOVE)
     private List<Student> students;
 
     public Integer getCourseId() {

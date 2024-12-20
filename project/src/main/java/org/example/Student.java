@@ -26,7 +26,7 @@ public class Student {
     @JoinColumn(name = "studentCourseId")
     private Course studentCourseId;
 
-    @OneToMany(mappedBy = "examStudentId")
+    @OneToMany(mappedBy = "examStudentId", cascade = CascadeType.REMOVE)
     private List<Exam> exams;
 
     public Integer getStudentId() {
