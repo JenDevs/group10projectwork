@@ -91,6 +91,7 @@ public class StudentCRUD {
                     .orElse(null);
 
             if (course != null) {
+                student.setStudentCourseId(course);
                 em.persist(student);
                 System.out.println("Student " + studentName + " added to " + courseName);
             } else {
