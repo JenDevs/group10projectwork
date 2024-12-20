@@ -12,7 +12,11 @@ public class ExamCRUD {
     public static Scanner scanner = new Scanner(System.in);
 
     public void examCRUDMenu(){
-        System.out.printf("""
+
+        boolean inSubMenu = true;
+        while (inSubMenu) {
+            System.out.printf("""
+                
                 Menu
                 ========
                 0. Go back to main menu
@@ -20,10 +24,7 @@ public class ExamCRUD {
                 2. Show all exams
                 3. Update an exam
                 4. Delete an exam
-                %n""");
-
-        boolean inSubMenu = true;
-        while (inSubMenu) {
+                """);
             try {
                 System.out.println();
                 System.out.println("Make a choice");
