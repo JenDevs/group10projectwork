@@ -17,7 +17,8 @@ public class CityCRUD {
         boolean inSubMenu = true;
         while (inSubMenu) {
             try {
-                System.out.printf("""
+                System.out.print("""
+                
                 Menu
                 ========
                 0. Go back to main menu
@@ -25,7 +26,8 @@ public class CityCRUD {
                 2. Show all cities
                 3. Update a city
                 4. Delete a city
-                %n""");
+                
+                """);
                 System.out.println("Make a choice");
                 int choice = scanner.nextInt();
                 scanner.nextLine();

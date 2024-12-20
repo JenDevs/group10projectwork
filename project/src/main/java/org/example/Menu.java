@@ -15,7 +15,7 @@ public class Menu {
                 3. Courses
                 4. Student
                 5. Exam
-                6.
+                6. Statistic
                 """);
     }
 }
