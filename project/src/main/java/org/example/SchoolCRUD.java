@@ -13,6 +13,7 @@ public class SchoolCRUD {
 
     public void schoolCRUDMenu(){
         System.out.printf("""
+                
                 Menu
                 ========
                 0. Go back to main menu
@@ -20,7 +21,8 @@ public class SchoolCRUD {
                 2. Show all schools
                 3. Update a school
                 4. Delete a school
-                %n""");
+                
+                """);
 
         boolean inSubMenu = true;
         while (inSubMenu) {
@@ -42,7 +44,6 @@ public class SchoolCRUD {
                         break;
                     case 4: deleteSchool();
                         break;
-                    case 5:
                     default:
                         System.out.println("Invalid choice, please try again");
                         break;
@@ -52,8 +53,8 @@ public class SchoolCRUD {
                 System.out.println("Invalid input, only integers are valid choices");
             }
         }
-
     }
+
     public void insertSchool() {
         School school = new School();
 
@@ -61,22 +62,25 @@ public class SchoolCRUD {
         String schoolName = scanner.nextLine();
         school.setSchoolName(schoolName);
 
-        System.out.println("Inter the city Id");
-        int cityId = scanner.nextInt();
+        System.out.println("Which city would you like to insert?");
+        String cityName = scanner.nextLine();
 
         JPAUtil.inTransaction(em -> {
-            City city = em.find(City.class, cityId);
+            City city = em.createQuery("SELECT c FROM City c WHERE c.cityName = :cityName", City.class)
+                    .setParameter("cityName",cityName )
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
             if (city != null) {
                 school.setSchoolCityId(city);
 
                 em.persist(school);
-                System.out.println("School " + schoolName + " added.");
+                System.out.println("School " + schoolName + " added to city " + cityName);
             } else {
-                System.out.println("City with id = " + cityId + " not exists");
+                System.out.println("City with name = " + cityName + " do not exists");
             }
-
         });
-
     }
 
     public void showAllSchools(){
@@ -88,7 +92,6 @@ public class SchoolCRUD {
         schools.forEach(System.out::println);
 
         em.close();
-
     }
 
     private void updateSchool() {
