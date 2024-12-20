@@ -3,11 +3,8 @@ package org.example;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
-import javax.xml.crypto.Data;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -17,7 +14,13 @@ public class StudentCRUD {
     public static Scanner scanner = new Scanner(System.in);
 
     public void studentCRUDMenu(){
-        System.out.printf("""
+
+        boolean inSubMenu = true;
+        while (inSubMenu) {
+
+            System.out.print(
+                """
+                
                 Menu
                 ========
                 0. Go back to main menu
@@ -25,10 +28,9 @@ public class StudentCRUD {
                 2. Show all students
                 3. Update an student
                 4. Delete an student
-                %n""");
+                
+                """);
 
-        boolean inSubMenu = true;
-        while (inSubMenu) {
             try {
                 System.out.println();
                 System.out.println("Make a choice");
@@ -60,6 +62,7 @@ public class StudentCRUD {
         }
 
     }
+
     public void insertStudent() {
         Student student = new Student();
 
@@ -77,22 +80,23 @@ public class StudentCRUD {
         String studentGender = scanner.nextLine();
         student.setStudentGender(studentGender);
 
-        System.out.println("Inter the course Id");
-        int courseId = scanner.nextInt();
+        System.out.println("Enter the course where you would like to add the student");
+        String courseName = scanner.nextLine();
 
         JPAUtil.inTransaction(em -> {
-            Course course = em.find(Course.class, courseId);
+            Course course = em.createQuery("SELECT c FROM Course c WHERE c.courseName = :courseName", Course.class)
+                    .setParameter("courseName",courseName )
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
             if (course != null) {
-                student.setStudentCourseId(course);
-
                 em.persist(student);
-                System.out.println("Student " + studentName + " added.");
+                System.out.println("Student " + studentName + " added to " + courseName);
             } else {
-                System.out.println("Course with id = " + course + " not exists");
+                System.out.println("Course with name = " + courseName + " do not exists");
             }
-
         });
-
     }
 
     public void showAllStudents(){
@@ -104,7 +108,6 @@ public class StudentCRUD {
         students.forEach(System.out::println);
 
         em.close();
-
     }
 
     private void updateStudent() {
