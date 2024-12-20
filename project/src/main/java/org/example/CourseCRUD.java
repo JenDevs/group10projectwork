@@ -12,74 +12,75 @@ public class CourseCRUD {
     public static Scanner scanner = new Scanner(System.in);
 
     public void courseCRUDMenu() {
-        boolean inSubMenu = true;
+        System.out.printf("""
+                Menu
+                ========
+                0. Go back to main menu
+                1. Add new course
+                2. Show all courses
+                3. Update a course
+                4. Delete a course
+                %n""");
 
+        boolean inSubMenu = true;
         while (inSubMenu) {
             try {
-                System.out.printf("""
-                        Menu
-                        ========
-                        0. Go back to main menu
-                        1. Add a course
-                        2. Show all courses
-                        3. Update a course
-                        4. Delete a course
-                        %n""");
-
-                System.out.print("Make a choice: ");
+                System.out.println();
+                System.out.println("Make a choice");
                 int choice = scanner.nextInt();
-                scanner.nextLine();
 
+                scanner.nextLine();
                 switch (choice) {
                     case 0:
+                        System.out.println("Exiting");
                         inSubMenu = false;
                         break;
-                    case 1:
-                        addCourse();
+                    case 1: insertCourse();
                         break;
-                    case 2:
-                        showCourses();
+                    case 2: showAllCourses();
                         break;
-                    case 3:
-                        updateCourse();
+                    case 3: updateCourse();
                         break;
-                    case 4:
-                        deleteCourse();
+                    case 4:deleteCourse();
                         break;
+                    case 5:
                     default:
-                        System.out.println("Invalid choice, please try again.");
+                        System.out.println("Invalid choice, please try again");
                         break;
                 }
+
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input, only integers are valid choices.");
-                scanner.nextLine();
+                System.out.println("Invalid input, only integers are valid choices");
             }
         }
     }
 
-    private void addCourse() {
-        System.out.print("Enter course name: ");
-        String name = scanner.nextLine();
+    public void insertCourse() {
+        Course course = new Course();
 
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = em.getTransaction();
+        System.out.println("Inter the course name");
+        String courseName = scanner.nextLine();
+        course.setCourseName(courseName);
 
-        try {
-            transaction.begin();
-            Course newCourse = new Course();
-            newCourse.setCourseName(name);
-            em.persist(newCourse);
-            transaction.commit();
-            System.out.println("Course added successfully!");
-        } catch (Exception e) {
-            transaction.rollback();
-            System.out.println("Failed to add course: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+        System.out.println("Inter the school Id");
+        int schoolId = scanner.nextInt();
+
+        JPAUtil.inTransaction(em -> {
+            School school = em.find(School.class, schoolId);
+            if (school != null) {
+                course.setCourseSchoolId(school);
+
+                em.persist(course);
+                System.out.println("Course " + courseName + " added.");
+            } else {
+                System.out.println("School with id = " + schoolId + " not exists");
+            }
+
+        });
+
     }
 
-    private void showCourses() {
+    private void showAllCourses() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             List<Course> courses = em.createQuery("SELECT c FROM Course c", Course.class).getResultList();
@@ -120,43 +121,19 @@ public class CourseCRUD {
         });
     }
 
-    private void deleteCourse() {
-        EntityManager em = JPAUtil.getEntityManager();
-        try {
-            List<Course> courses = em.createQuery("SELECT c FROM Course c", Course.class).getResultList();
-            if (courses.isEmpty()) {
-                System.out.println("No courses available to delete.");
-                return;
-            }
+    public void deleteCourse(){
+        System.out.println("Enter the ID of the course to delete");
+        int courseId = scanner.nextInt();
 
-            System.out.println("Select a course to delete:");
-            for (int i = 0; i < courses.size(); i++) {
-                System.out.println((i + 1) + ". " + courses.get(i).getCourseName());
-            }
+        JPAUtil.inTransaction(em -> {
+            Course course = em.find(Course.class, courseId);
+            if (course != null) {
+                em.remove(course);
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-
-            if (choice < 1 || choice > courses.size()) {
-                System.out.println("Invalid choice, no course selected.");
-                return;
+                System.out.println(Course.class.getSimpleName() + " with ID " + courseId + " deleted." );
+            } else {
+                System.out.println(Course.class.getSimpleName() + " with ID " + courseId + " not found.");
             }
-            Course courseToDelete = courses.get(choice - 1);
-
-            EntityTransaction transaction = em.getTransaction();
-            try {
-                transaction.begin();
-                em.remove(courseToDelete);
-                transaction.commit();
-                System.out.println("Course '" + courseToDelete.getCourseName() + "' deleted successfully.");
-            } catch (Exception e) {
-                transaction.rollback();
-                System.out.println("Failed to delete course: " + e.getMessage());
-            }
-        } catch (Exception e) {
-            System.out.println("Failed to retrieve courses: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+        });
     }
 }
