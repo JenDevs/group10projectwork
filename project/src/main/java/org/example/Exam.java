@@ -14,7 +14,7 @@ public class Exam {
     private String examName;
 
     @Column(name = "examRating", nullable = false)
-    private Integer examRating;
+    private int examRating;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "examStudentId")
@@ -36,11 +36,11 @@ public class Exam {
         this.examName = examName;
     }
 
-    public Integer getExamRating() {
+    public int getExamRating() {
         return examRating;
     }
 
-    public void setExamRating(Integer examRating) {
+    public void setExamRating(int examRating) {
         this.examRating = examRating;
     }
 
@@ -54,11 +54,6 @@ public class Exam {
 
     @Override
     public String toString() {
-        return "Exam{" +
-                "examId=" + examId +
-                ", examName='" + examName + '\'' +
-                ", examRating=" + examRating +
-                ", examStudentId=" + examStudentId +
-                '}';
+        return examName;
     }
 }
