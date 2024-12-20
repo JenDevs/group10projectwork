@@ -3,6 +3,7 @@ package org.example;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "student", schema = "education")
@@ -24,6 +25,9 @@ public class Student {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "studentCourseId")
     private Course studentCourseId;
+
+    @OneToMany(mappedBy = "examStudentId")
+    private List<Exam> exams;
 
     public Integer getStudentId() {
         return studentId;
