@@ -3,6 +3,8 @@ package org.example;
 import jakarta.persistence.*;
 import org.w3c.dom.ls.LSOutput;
 
+import java.util.List;
+
 @Entity
 @Table(name = "city", schema = "education")
 public class City {
@@ -12,6 +14,9 @@ public class City {
 
     @Column(name = "cityName")
     private String cityName;
+
+    @OneToMany(mappedBy = "schoolCityId", cascade = CascadeType.REMOVE)
+    private List<School> schools;
 
     public Integer getCityId() {
         return cityId;
