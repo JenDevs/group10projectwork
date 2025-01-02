@@ -1,6 +1,7 @@
 package org.example;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -22,6 +23,7 @@ public class Statistic {
                         1. Show top 3 Students
                         2. Highest and lowest grades
                            for every course
+                        3. Show courses by school
                         
                         """);
                 System.out.println("Make a choice");
@@ -37,6 +39,9 @@ public class Statistic {
                         break;
                     case 2:
                         gradesForCourses();
+                        break;
+                    case 3:
+                        showCoursesBySchool();
                         break;
                     default:
                         System.out.println("Invalid choice, please try again");
@@ -100,4 +105,35 @@ public class Statistic {
         }
 
     }
+
+    private void showCoursesBySchool () {
+        EntityManager em = JPAUtil.getEntityManager();
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the name of the school");
+        String nameOfSchool = scanner.nextLine();
+
+        String sql = """
+                SELECT c.courseName
+                FROM Course c
+                JOIN c.courseSchoolId s
+                WHERE s.schoolName = :schoolName
+                ORDER BY c.courseName
+                """;
+
+        TypedQuery<String> query = em.createQuery(sql, String.class);
+        query.setParameter("schoolName", nameOfSchool);
+
+        List<String> courses = query.getResultList();
+
+        System.out.println("Courses for " + nameOfSchool + ":");
+        if (courses.isEmpty()) {
+            System.out.println("No courses found");
+        }
+        else {
+            courses.forEach(System.out::println);
+        }
+
+    }
+
 }
