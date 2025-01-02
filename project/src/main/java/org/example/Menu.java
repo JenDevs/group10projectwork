@@ -2,8 +2,6 @@ package org.example;
 
 public class Menu {
 
-    // meny för huvudmenyn
-    // Menu, Exit, Cities, Schools, Courses,Students,Exams
     public void showMainMenu() {
         System.out.println(
                 """  
