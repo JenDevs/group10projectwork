@@ -12,7 +12,11 @@ public class SchoolCRUD {
     public static Scanner scanner = new Scanner(System.in);
 
     public void schoolCRUDMenu(){
-        System.out.printf("""
+
+        boolean inSubMenu = true;
+        while (inSubMenu) {
+            try {
+        System.out.print("""
                 
                 Menu
                 ========
@@ -24,14 +28,10 @@ public class SchoolCRUD {
                 
                 """);
 
-        boolean inSubMenu = true;
-        while (inSubMenu) {
-            try {
-                System.out.println();
                 System.out.println("Make a choice");
                 int choice = scanner.nextInt();
-
                 scanner.nextLine();
+
                 switch (choice) {
                     case 0:
                         inSubMenu = false;

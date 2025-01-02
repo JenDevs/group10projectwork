@@ -15,7 +15,8 @@ public class ExamCRUD {
 
         boolean inSubMenu = true;
         while (inSubMenu) {
-            System.out.printf("""
+            try {
+            System.out.print("""
                 
                 Menu
                 ========
@@ -24,13 +25,13 @@ public class ExamCRUD {
                 2. Show all exams
                 3. Update an exam
                 4. Delete an exam
+                
                 """);
-            try {
-                System.out.println();
+
                 System.out.println("Make a choice");
                 int choice = scanner.nextInt();
-
                 scanner.nextLine();
+
                 switch (choice) {
                     case 0:
                         inSubMenu = false;

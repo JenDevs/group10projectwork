@@ -12,7 +12,13 @@ public class CourseCRUD {
     public static Scanner scanner = new Scanner(System.in);
 
     public void courseCRUDMenu() {
-        System.out.printf("""
+
+        boolean inSubMenu = true;
+        while (inSubMenu) {
+            try {
+
+        System.out.print("""
+                
                 Menu
                 ========
                 0. Go back to main menu
@@ -20,16 +26,13 @@ public class CourseCRUD {
                 2. Show all courses
                 3. Update a course
                 4. Delete a course
-                %n""");
+                
+                """);
 
-        boolean inSubMenu = true;
-        while (inSubMenu) {
-            try {
-                System.out.println();
                 System.out.println("Make a choice");
                 int choice = scanner.nextInt();
-
                 scanner.nextLine();
+
                 switch (choice) {
                     case 0:
                         System.out.println("Exiting");

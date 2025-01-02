@@ -11,7 +11,6 @@ public class CityCRUD {
 
     public static Scanner scanner = new Scanner(System.in);
 
-    // meny för att välja vilken CRUD, menyn kan användas för alla tabeller, genom att
     public void cityCRUDMenu(){
 
         boolean inSubMenu = true;
@@ -28,6 +27,7 @@ public class CityCRUD {
                 4. Delete a city
                 
                 """);
+
                 System.out.println("Make a choice");
                 int choice = scanner.nextInt();
                 scanner.nextLine();

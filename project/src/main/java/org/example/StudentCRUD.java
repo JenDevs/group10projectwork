@@ -17,6 +17,7 @@ public class StudentCRUD {
 
         boolean inSubMenu = true;
         while (inSubMenu) {
+                try {
 
             System.out.print(
                 """
@@ -31,8 +32,6 @@ public class StudentCRUD {
                 
                 """);
 
-            try {
-                System.out.println();
                 System.out.println("Make a choice");
                 int choice = scanner.nextInt();
 
