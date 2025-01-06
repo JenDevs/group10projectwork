@@ -27,8 +27,8 @@ public class StudentCRUD {
                 0. Go back to main menu
                 1. Add new student
                 2. Show all students
-                3. Update an student
-                4. Delete an student
+                3. Update a student
+                4. Delete a student
                 
                 """);
 

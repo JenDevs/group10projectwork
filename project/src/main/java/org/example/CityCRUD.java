@@ -77,8 +77,8 @@ public class CityCRUD {
 
         TypedQuery<City> query = em.createQuery("SELECT c FROM City c ", City.class);
 
-        List<City> cytis = query.getResultList();
-        cytis.forEach(System.out::println);
+        List<City> cities = query.getResultList();
+        cities.forEach(System.out::println);
 
         em.close();
     }
