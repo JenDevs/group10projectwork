@@ -65,12 +65,9 @@ public class CityCRUD {
         city.setCityName(cityName);
 
 
-        JPAUtil.inTransaction(entityManager ->  {
-            entityManager.persist(city);
-        });
+        JPAUtil.inTransaction(entityManager -> entityManager.persist(city));
 
     }
-
 
     public void citySelect(){
         EntityManager em = JPAUtil.getEntityManager();
@@ -97,13 +94,12 @@ public class CityCRUD {
                 System.out.println("Enter a new name for the city");
                 String newCityName = scanner.nextLine();
                 city.setCityName(newCityName);
-                System.out.println(City.class.getSimpleName() + " with name " + oldCityName + " updated");
+                System.out.println(City.class.getSimpleName() + " " + oldCityName + " updated to "+ newCityName );
             } else {
                 System.out.println(City.class.getSimpleName() + " with name " + oldCityName + " not found");
             }
         });
     }
-
 
     public void deleteCity(){
         System.out.println("Enter the name of the city you want to delete");
@@ -118,7 +114,7 @@ public class CityCRUD {
             if (city != null) {
                 em.remove(city);
 
-                System.out.println(City.class.getSimpleName() + " with name " + cityName + " deleted." );
+                System.out.println(City.class.getSimpleName() + " " + cityName + " deleted." );
             } else {
                 System.out.println(City.class.getSimpleName() + " with name " + cityName + " not found.");
             }
