@@ -61,26 +61,30 @@ public class CourseCRUD {
     public void insertCourse() {
         Course course = new Course();
 
-        System.out.println("Inter the course name");
+        System.out.println("Enter the course name");
         String courseName = scanner.nextLine();
         course.setCourseName(courseName);
 
-        System.out.println("Inter the school Id");
-        int schoolId = scanner.nextInt();
+        System.out.println("To which school would you like to add the course?");
+        String schoolName = scanner.nextLine();
 
         JPAUtil.inTransaction(em -> {
-            School school = em.find(School.class, schoolId);
+            School school = em.createQuery("SELECT s FROM School s WHERE s.schoolName = :schoolName", School.class)
+                    .setParameter("schoolName", schoolName)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
             if (school != null) {
                 course.setCourseSchoolId(school);
 
                 em.persist(course);
-                System.out.println("Course " + courseName + " added.");
+                System.out.println(courseName + " added to " + schoolName);
             } else {
-                System.out.println("School with id = " + schoolId + " not exists");
+                System.out.println("School with name " + schoolName + " do not exists");
             }
 
         });
-
     }
 
     private void showAllCourses() {
@@ -117,25 +121,30 @@ public class CourseCRUD {
                 System.out.print("Enter the new name for the course: ");
                 String newCourseName = scanner.nextLine();
                 course.setCourseName(newCourseName);
-                System.out.println("Course '" + oldCourseName + "' updated to '" + newCourseName + "'.");
+                System.out.println("Course " + oldCourseName + " updated to " + newCourseName);
             } else {
-                System.out.println("Course with name '" + oldCourseName + "' not found.");
+                System.out.println("Course with name " + oldCourseName + " not found.");
             }
         });
     }
 
     public void deleteCourse(){
-        System.out.println("Enter the ID of the course to delete");
-        int courseId = scanner.nextInt();
+        System.out.println("Enter the name of the course to delete");
+        String courseName = scanner.nextLine();
 
         JPAUtil.inTransaction(em -> {
-            Course course = em.find(Course.class, courseId);
+            Course course = em.createQuery("SELECT c FROM Course c WHERE c.courseName = :courseName", Course.class)
+                    .setParameter("courseName", courseName)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
             if (course != null) {
                 em.remove(course);
 
-                System.out.println(Course.class.getSimpleName() + " with ID " + courseId + " deleted." );
+                System.out.println(Course.class.getSimpleName() + " " + courseName + " deleted." );
             } else {
-                System.out.println(Course.class.getSimpleName() + " with ID " + courseId + " not found.");
+                System.out.println(Course.class.getSimpleName() + " " + courseName + " not found.");
             }
         });
     }
