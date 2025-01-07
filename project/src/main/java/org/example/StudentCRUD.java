@@ -5,7 +5,6 @@ import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 

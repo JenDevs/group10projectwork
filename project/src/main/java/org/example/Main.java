@@ -1,10 +1,6 @@
 package org.example;
 
-import jakarta.persistence.EntityManager;
-
-import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.logging.LogManager;
 
 
 public class Main {

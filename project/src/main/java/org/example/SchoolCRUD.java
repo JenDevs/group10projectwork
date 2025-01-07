@@ -2,8 +2,6 @@ package org.example;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
