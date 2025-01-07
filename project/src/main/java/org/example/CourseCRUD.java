@@ -1,7 +1,6 @@
 package org.example;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -88,8 +87,7 @@ public class CourseCRUD {
     }
 
     private void showAllCourses() {
-        EntityManager em = JPAUtil.getEntityManager();
-        try {
+        try (EntityManager em = JPAUtil.getEntityManager()) {
             List<Course> courses = em.createQuery("SELECT c FROM Course c", Course.class).getResultList();
             if (courses.isEmpty()) {
                 System.out.println("No courses available.");
@@ -101,8 +99,6 @@ public class CourseCRUD {
             }
         } catch (Exception e) {
             System.out.println("Failed to retrieve courses: " + e.getMessage());
-        } finally {
-            em.close();
         }
     }
 
