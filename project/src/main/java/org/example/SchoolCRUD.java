@@ -58,11 +58,11 @@ public class SchoolCRUD {
     public void insertSchool() {
         School school = new School();
 
-        System.out.println("Inter the school name");
+        System.out.println("Enter the school name");
         String schoolName = scanner.nextLine();
         school.setSchoolName(schoolName);
 
-        System.out.println("Which city would you like to insert?");
+        System.out.println("To which city would you like to add the school");
         String cityName = scanner.nextLine();
 
         JPAUtil.inTransaction(em -> {
@@ -76,9 +76,9 @@ public class SchoolCRUD {
                 school.setSchoolCityId(city);
 
                 em.persist(school);
-                System.out.println("School " + schoolName + " added to city " + cityName);
+                System.out.println(schoolName + " added to " + cityName);
             } else {
-                System.out.println("City with name = " + cityName + " do not exists");
+                System.out.println("City with name " + cityName + " do not exists");
             }
         });
     }
@@ -108,27 +108,32 @@ public class SchoolCRUD {
                 System.out.println("Enter a new name for the school");
                 String newSchoolName = scanner.nextLine();
                 school.setSchoolName(newSchoolName);
-                System.out.println(School.class.getSimpleName() + " with name " + oldSchoolName + " updated");
+                System.out.println(School.class.getSimpleName() + " " + oldSchoolName + " updated to " + newSchoolName);
             } else {
                 System.out.println(School
-                        .class.getSimpleName() + " with name " + oldSchoolName + " not found");
+                        .class.getSimpleName() + " " + oldSchoolName + " not found");
             }
         });
     }
 
     public void deleteSchool(){
-        System.out.println("Enter the ID of the school to delete");
-        int schoolID = scanner.nextInt();
+        System.out.println("Enter the name of the school you want to delete");
+        String schoolName = scanner.nextLine();
 
         JPAUtil.inTransaction(em -> {
-            School school = em.find(School.class, schoolID);
+            School school = em.createQuery("SELECT s FROM School s WHERE s.schoolName = :schoolName", School.class )
+                    .setParameter("schoolName", schoolName)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
             if (school != null) {
                 em.remove(school);
 
-                System.out.println(School.class.getSimpleName() + " with ID " + schoolID + " deleted." );
+                System.out.println(School.class.getSimpleName() + " " + schoolName + " deleted." );
             } else {
-                System.out.println(School.class.getSimpleName() + " with ID " + schoolID + " not found.");
+                System.out.println(School.class.getSimpleName() + " " + schoolName + " not found.");
             }
         });
     }
 }
+
