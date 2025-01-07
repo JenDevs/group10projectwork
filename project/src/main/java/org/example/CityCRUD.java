@@ -29,8 +29,15 @@ public class CityCRUD {
                 """);
 
                 System.out.println("Make a choice");
-                int choice = scanner.nextInt();
-                scanner.nextLine();
+                String input = scanner.nextLine();
+                int choice;
+
+                try {
+                    choice = Integer.parseInt(input);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid choice, only numbers between 0 and 4 are accepted");
+                    continue;
+                }
 
                 switch (choice) {
                     case 0:
@@ -44,15 +51,13 @@ public class CityCRUD {
                         break;
                     case 4: deleteCity();
                         break;
-                    case 5:
                     default:
                         System.out.println("Invalid choice, please try again");
                         break;
                 }
 
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input, only integers are valid choices");
-                scanner.nextLine();
+            } catch (Exception e) {
+                System.out.println("An unexpected error occurred" + e.getMessage());
             }
         }
     }

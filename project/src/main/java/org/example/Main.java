@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.logging.LogManager;
 
 
 public class Main {
@@ -24,10 +25,18 @@ public class Main {
         while (isRunning) {
             try {
                 menu.showMainMenu();
-                System.out.println("Make a choice");
-                int choice = scanner.nextInt();
 
-                scanner.nextLine();
+                System.out.println("Make a choice");
+                String input = scanner.nextLine();
+                int choice;
+
+                try {
+                    choice = Integer.parseInt(input);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid choice, only numbers between 0 and 6 are accepted");
+                    continue;
+                }
+
                 switch (choice) {
                     case 0:
                         System.out.println("Exiting");
@@ -56,8 +65,8 @@ public class Main {
                         break;
                 }
 
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input, only integers are valid choices");
+            } catch (Exception e) {
+                System.out.println("An unexpected error occurred" + e.getMessage());
             }
         }
     }
