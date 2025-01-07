@@ -22,13 +22,21 @@ public class Statistic {
                         1. Show top 3 Students
                         2. Highest and lowest grades
                            for every course
-                        3. Show courses by school
+                        3. Number of courses per school
                         4. Show students and exam by course and school
                         
                         """);
+
                 System.out.println("Make a choice");
-                int choice = scanner.nextInt();
-                scanner.nextLine();
+                String input = scanner.nextLine();
+                int choice;
+
+                try {
+                    choice = Integer.parseInt(input);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid choice, only numbers between 0 and 4 are accepted");
+                    continue;
+                }
 
                 switch (choice) {
                     case 0:
@@ -41,7 +49,7 @@ public class Statistic {
                         gradesForCourses();
                         break;
                     case 3:
-                        showCoursesBySchool();
+                        numberOfCoursesPerSchool();
                         break;
                     case 4:
                         Map<String, List<Exam>> gropedExam = showAllExamsGroupedBySchoolAndCourse();
@@ -58,9 +66,8 @@ public class Statistic {
                         break;
                 }
 
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input, only integers are valid choices");
-                scanner.nextLine();
+            } catch (Exception e) {
+                System.out.println("An unexpected error occurred" + e.getMessage());
             }
         }
     }
@@ -116,30 +123,29 @@ public class Statistic {
 
     }
 
-    private void showCoursesBySchool() {
+    private void numberOfCoursesPerSchool() {
         EntityManager em = JPAUtil.getEntityManager();
 
-        System.out.println("Enter the name of the school");
-        String nameOfSchool = scanner.nextLine();
-
         String sql = """
-                SELECT c.courseName
+                SELECT s.schoolName, COUNT(c)
                 FROM Course c
                 JOIN c.courseSchoolId s
-                WHERE s.schoolName = :schoolName
-                ORDER BY c.courseName
+                GROUP BY s.schoolName
+                ORDER BY s.schoolName
                 """;
 
-        TypedQuery<String> query = em.createQuery(sql, String.class);
-        query.setParameter("schoolName", nameOfSchool);
+        TypedQuery<Object[]> query = em.createQuery(sql, Object[].class);
 
-        List<String> courses = query.getResultList();
-
-        System.out.println("Courses for " + nameOfSchool + ":");
-        if (courses.isEmpty()) {
-            System.out.println("No courses found");
+        List<Object[]> results = query.getResultList();
+        System.out.println("\nNumber of courses per school:");
+        if (results.isEmpty()) {
+            System.out.println("No school found");
         } else {
-            courses.forEach(System.out::println);
+            results.forEach(result -> {
+                String schoolName = (String) result[0];
+                long count = (Long) result[1];
+                System.out.println(schoolName + ": " + count + " courses");
+                    });
         }
 
     }
