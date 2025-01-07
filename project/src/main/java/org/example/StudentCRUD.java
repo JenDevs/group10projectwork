@@ -137,17 +137,22 @@ public class StudentCRUD {
 
 
     public void deleteStudent(){
-        System.out.println("Enter the ID of the student to delete");
-        int studentID = scanner.nextInt();
+        System.out.println("Enter the name of the student you want to delete");
+        String studentName = scanner.nextLine();
 
         JPAUtil.inTransaction(em -> {
-            Student student = em.find(Student.class, studentID);
+        Student student = em.createQuery("SELECT s FROM Student s WHERE s.studentName = :studentName", Student.class)
+                .setParameter("studentName", studentName)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+
             if (student != null) {
                 em.remove(student);
 
-                System.out.println(Student.class.getSimpleName() + " with ID " + studentID + " deleted." );
+                System.out.println(Student.class.getSimpleName() + " " + studentName + " deleted." );
             } else {
-                System.out.println(Student.class.getSimpleName() + " with ID " + studentID + " not found.");
+                System.out.println(Student.class.getSimpleName() + " " + studentName + " not found.");
             }
         });
     }
