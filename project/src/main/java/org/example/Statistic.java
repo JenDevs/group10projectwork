@@ -24,6 +24,7 @@ public class Statistic {
                            for every course
                         3. Show courses by school
                         4. Show students and exam by course and school
+                        5. Show all records
                         
                         """);
                 System.out.println("Make a choice");
@@ -52,6 +53,8 @@ public class Statistic {
                                     ));
 
                         });
+                        break;
+                    case 5: showAllRecords();
                         break;
                     default:
                         System.out.println("Invalid choice, please try again");
@@ -176,5 +179,45 @@ public class Statistic {
         return numberedGroupedExams;
 
     }
+
+    public void showAllRecords() {
+        EntityManager em = JPAUtil.getEntityManager();
+
+        String sql = """
+            SELECT ci, sch, cr, st, e
+            FROM City ci
+            JOIN ci.schools sch
+            JOIN sch.courses cr
+            JOIN cr.students st
+            JOIN st.exams e
+            ORDER BY ci.cityName
+            """;
+
+        TypedQuery<Object[]> query = em.createQuery(sql, Object[].class);
+
+        List<Object[]> result = query.getResultList();
+
+        String format = "%-15s %-25s %-20s %-20s %-20s%n";
+        System.out.printf(format, "City", "School", "Course", "Student", "Exam Rating");
+        System.out.println("===============================================================================================");
+
+        for (Object[] row : result) {
+            City ci = (City) row[0];
+            School sch = (School) row[1];
+            Course cr = (Course) row[2];
+            Student st = (Student) row[3];
+            Exam exam = (Exam) row[4];
+
+            System.out.printf(format,
+                    ci.getCityName(),
+                    sch.getSchoolName(),
+                    cr.getCourseName(),
+                    st.getStudentName(),
+                    exam.getExamRating());
+        }
+
+        em.close();
+    }
+
 
 }
