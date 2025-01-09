@@ -90,23 +90,23 @@ INSERT INTO course(courseName, courseSchoolId)
 VALUES
     -- Hvitfeldtska Gymnasium
     ('Mathematics', 1),
-    ('History', 1),
-    ('Physics', 1),
+    ('History', 2),
+    ('Physics', 3),
 
     -- Södra Latin
-    ('Mathematics', 2),
-    ('Philosophy', 2),
-    ('Sociology', 2),
+    ('Mathematics', 4),
+    ('Philosophy', 5),
+    ('Sociology', 6),
 
     -- Borås Gymnasieskola
-    ('Mathematics', 3),
-    ('English', 3),
-    ('Economics', 3),
+    ('Mathematics', 7),
+    ('English', 8),
+    ('Economics', 9),
 
     -- Malmö Borgarskola
-    ('Geography', 4),
-    ('Art', 4),
-    ('Music', 4);
+    ('Geography', 10),
+    ('Art', 11),
+    ('Music', 12);
 
 
 INSERT INTO student(studentName, studentBirthday, studentGender, studentCourseId)
@@ -252,3 +252,11 @@ FROM course
          JOIN student ON course.courseID = student.studentCourseId
          JOIN exam ON student.studentId = exam.examStudentId
 GROUP BY courseName;
+
+SELECT exam.examRating, student.studentName, course.courseName, city.cityName, school.schoolName
+FROM city
+         JOIN school ON city.cityId = school.schoolCityId
+         LEFT JOIN course ON school.schoolId = course.courseSchoolId
+         JOIN student ON course.courseID = student.studentCourseId
+         JOIN exam ON student.studentId = exam.examStudentId
+GROUP BY city.cityName, school.schoolName, course.courseName, student.studentName, exam.examRating;
