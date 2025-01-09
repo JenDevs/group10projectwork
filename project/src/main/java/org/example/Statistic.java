@@ -203,7 +203,7 @@ public class Statistic {
 
         List<Object[]> result = query.getResultList();
 
-        String format = "%-15s %-25s %-20s %-20s %-20s%n";
+        String format = "%-15s %-30s %-20s %-20s %-20s%n";
         System.out.printf(format, "City", "School", "Course", "Student", "Exam Rating");
         System.out.println("===============================================================================================");
 
