@@ -21,8 +21,8 @@ public class StudentCRUD {
             System.out.print(
                 """
                 
-                Menu
-                ========
+                Student menu
+                =======================
                 0. Go back to main menu
                 1. Add new student
                 2. Show all students
@@ -110,7 +110,14 @@ public class StudentCRUD {
         TypedQuery<Student> query = em.createQuery("SELECT s FROM Student s ", Student.class);
 
         List<Student> students = query.getResultList();
-        students.forEach(System.out::println);
+
+        String format = "%-20s %-20s %-10s%n";
+        System.out.printf(format, "Name", "Birthday", "Gender");
+        System.out.println("--------------------------------------------------");
+
+        for (Student student : students) {
+            System.out.printf(format, student.getStudentName(), student.getStudentBirthday(), student.getStudentGender());
+        }
 
         em.close();
     }
