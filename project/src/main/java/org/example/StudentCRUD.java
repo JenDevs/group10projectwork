@@ -5,7 +5,6 @@ import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -33,9 +32,16 @@ public class StudentCRUD {
                 """);
 
                 System.out.println("Make a choice");
-                int choice = scanner.nextInt();
+                String input = scanner.nextLine();
+                int choice;
 
-                scanner.nextLine();
+                try {
+                    choice = Integer.parseInt(input);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid choice, only numbers between 0 and 4 are accepted");
+                    continue;
+                }
+
                 switch (choice) {
                     case 0:
                         System.out.println("Exiting");
@@ -49,15 +55,14 @@ public class StudentCRUD {
                         break;
                     case 4:deleteStudent();
                         break;
-                    case 5:
                     default:
                         System.out.println("Invalid choice, please try again");
                         break;
                 }
 
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input, only integers are valid choices");
-            }
+                } catch (Exception e) {
+                    System.out.println("An unexpected error occurred" + e.getMessage());
+                }
         }
 
     }
@@ -137,17 +142,22 @@ public class StudentCRUD {
 
 
     public void deleteStudent(){
-        System.out.println("Enter the ID of the student to delete");
-        int studentID = scanner.nextInt();
+        System.out.println("Enter the name of the student you want to delete");
+        String studentName = scanner.nextLine();
 
         JPAUtil.inTransaction(em -> {
-            Student student = em.find(Student.class, studentID);
+        Student student = em.createQuery("SELECT s FROM Student s WHERE s.studentName = :studentName", Student.class)
+                .setParameter("studentName", studentName)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+
             if (student != null) {
                 em.remove(student);
 
-                System.out.println(Student.class.getSimpleName() + " with ID " + studentID + " deleted." );
+                System.out.println(Student.class.getSimpleName() + " " + studentName + " deleted." );
             } else {
-                System.out.println(Student.class.getSimpleName() + " with ID " + studentID + " not found.");
+                System.out.println(Student.class.getSimpleName() + " " + studentName + " not found.");
             }
         });
     }

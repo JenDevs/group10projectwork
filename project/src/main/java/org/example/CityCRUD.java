@@ -29,8 +29,15 @@ public class CityCRUD {
                 """);
 
                 System.out.println("Make a choice");
-                int choice = scanner.nextInt();
-                scanner.nextLine();
+                String input = scanner.nextLine();
+                int choice;
+
+                try {
+                    choice = Integer.parseInt(input);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid choice, only numbers between 0 and 4 are accepted");
+                    continue;
+                }
 
                 switch (choice) {
                     case 0:
@@ -44,15 +51,13 @@ public class CityCRUD {
                         break;
                     case 4: deleteCity();
                         break;
-                    case 5:
                     default:
                         System.out.println("Invalid choice, please try again");
                         break;
                 }
 
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input, only integers are valid choices");
-                scanner.nextLine();
+            } catch (Exception e) {
+                System.out.println("An unexpected error occurred" + e.getMessage());
             }
         }
     }
@@ -65,12 +70,9 @@ public class CityCRUD {
         city.setCityName(cityName);
 
 
-        JPAUtil.inTransaction(entityManager ->  {
-            entityManager.persist(city);
-        });
+        JPAUtil.inTransaction(entityManager -> entityManager.persist(city));
 
     }
-
 
     public void citySelect(){
         EntityManager em = JPAUtil.getEntityManager();
@@ -97,13 +99,12 @@ public class CityCRUD {
                 System.out.println("Enter a new name for the city");
                 String newCityName = scanner.nextLine();
                 city.setCityName(newCityName);
-                System.out.println(City.class.getSimpleName() + " with name " + oldCityName + " updated");
+                System.out.println(City.class.getSimpleName() + " " + oldCityName + " updated to "+ newCityName );
             } else {
                 System.out.println(City.class.getSimpleName() + " with name " + oldCityName + " not found");
             }
         });
     }
-
 
     public void deleteCity(){
         System.out.println("Enter the name of the city you want to delete");
@@ -118,7 +119,7 @@ public class CityCRUD {
             if (city != null) {
                 em.remove(city);
 
-                System.out.println(City.class.getSimpleName() + " with name " + cityName + " deleted." );
+                System.out.println(City.class.getSimpleName() + " " + cityName + " deleted." );
             } else {
                 System.out.println(City.class.getSimpleName() + " with name " + cityName + " not found.");
             }

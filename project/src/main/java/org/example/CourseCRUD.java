@@ -1,9 +1,7 @@
 package org.example;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -30,8 +28,15 @@ public class CourseCRUD {
                 """);
 
                 System.out.println("Make a choice");
-                int choice = scanner.nextInt();
-                scanner.nextLine();
+                String input = scanner.nextLine();
+                int choice;
+
+                try {
+                    choice = Integer.parseInt(input);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid choice, only numbers between 0 and 4 are accepted");
+                    continue;
+                }
 
                 switch (choice) {
                     case 0:
@@ -46,14 +51,13 @@ public class CourseCRUD {
                         break;
                     case 4:deleteCourse();
                         break;
-                    case 5:
                     default:
                         System.out.println("Invalid choice, please try again");
                         break;
                 }
 
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input, only integers are valid choices");
+            } catch (Exception e) {
+                System.out.println("An unexpected error occurred" + e.getMessage());
             }
         }
     }
@@ -61,31 +65,34 @@ public class CourseCRUD {
     public void insertCourse() {
         Course course = new Course();
 
-        System.out.println("Inter the course name");
+        System.out.println("Enter the course name");
         String courseName = scanner.nextLine();
         course.setCourseName(courseName);
 
-        System.out.println("Inter the school Id");
-        int schoolId = scanner.nextInt();
+        System.out.println("To which school would you like to add the course?");
+        String schoolName = scanner.nextLine();
 
         JPAUtil.inTransaction(em -> {
-            School school = em.find(School.class, schoolId);
+            School school = em.createQuery("SELECT s FROM School s WHERE s.schoolName = :schoolName", School.class)
+                    .setParameter("schoolName", schoolName)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
             if (school != null) {
                 course.setCourseSchoolId(school);
 
                 em.persist(course);
-                System.out.println("Course " + courseName + " added.");
+                System.out.println(courseName + " added to " + schoolName);
             } else {
-                System.out.println("School with id = " + schoolId + " not exists");
+                System.out.println("School with name " + schoolName + " do not exists");
             }
 
         });
-
     }
 
     private void showAllCourses() {
-        EntityManager em = JPAUtil.getEntityManager();
-        try {
+        try (EntityManager em = JPAUtil.getEntityManager()) {
             List<Course> courses = em.createQuery("SELECT c FROM Course c", Course.class).getResultList();
             if (courses.isEmpty()) {
                 System.out.println("No courses available.");
@@ -97,8 +104,6 @@ public class CourseCRUD {
             }
         } catch (Exception e) {
             System.out.println("Failed to retrieve courses: " + e.getMessage());
-        } finally {
-            em.close();
         }
     }
 
@@ -117,25 +122,30 @@ public class CourseCRUD {
                 System.out.print("Enter the new name for the course: ");
                 String newCourseName = scanner.nextLine();
                 course.setCourseName(newCourseName);
-                System.out.println("Course '" + oldCourseName + "' updated to '" + newCourseName + "'.");
+                System.out.println("Course " + oldCourseName + " updated to " + newCourseName);
             } else {
-                System.out.println("Course with name '" + oldCourseName + "' not found.");
+                System.out.println("Course with name " + oldCourseName + " not found.");
             }
         });
     }
 
     public void deleteCourse(){
-        System.out.println("Enter the ID of the course to delete");
-        int courseId = scanner.nextInt();
+        System.out.println("Enter the name of the course to delete");
+        String courseName = scanner.nextLine();
 
         JPAUtil.inTransaction(em -> {
-            Course course = em.find(Course.class, courseId);
+            Course course = em.createQuery("SELECT c FROM Course c WHERE c.courseName = :courseName", Course.class)
+                    .setParameter("courseName", courseName)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
             if (course != null) {
                 em.remove(course);
 
-                System.out.println(Course.class.getSimpleName() + " with ID " + courseId + " deleted." );
+                System.out.println(Course.class.getSimpleName() + " " + courseName + " deleted." );
             } else {
-                System.out.println(Course.class.getSimpleName() + " with ID " + courseId + " not found.");
+                System.out.println(Course.class.getSimpleName() + " " + courseName + " not found.");
             }
         });
     }
