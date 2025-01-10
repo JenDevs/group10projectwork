@@ -75,7 +75,7 @@ public class StudentCRUD {
     public void insertStudent() {
         Student student = new Student();
 
-        System.out.println("Inter the student name");
+        System.out.println("Enter the student name");
         String studentName = scanner.nextLine();
         student.setStudentName(studentName);
 
