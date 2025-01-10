@@ -9,7 +9,6 @@ CREATE TABLE city
     PRIMARY KEY (cityId)
 );
 
-
 CREATE TABLE school
 (
     schoolId     INT NOT NULL AUTO_INCREMENT UNIQUE,
@@ -82,9 +81,6 @@ VALUES
     ('Malmö Borgarskola', 4),
     ('ProCivitas Privata Gymnasium Malmö', 4),
     ('Malmö Latin', 4);
-
-INSERT INTO course(courseName, courseSchoolId)
-VALUES ('kivi', 2);
 
 INSERT INTO course(courseName, courseSchoolId)
 VALUES
