@@ -18,8 +18,8 @@ public class CityCRUD {
             try {
                 System.out.print("""
                 
-                Menu
-                ========
+                City menu
+                =======================
                 0. Go back to main menu
                 1. Add new city
                 2. Show all cities

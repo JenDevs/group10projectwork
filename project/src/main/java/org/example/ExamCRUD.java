@@ -17,8 +17,8 @@ public class ExamCRUD {
             try {
             System.out.print("""
                 
-                Menu
-                ========
+                Exam menu
+                =======================
                 0. Go back to main menu
                 1. Add new exam
                 2. Show all exams

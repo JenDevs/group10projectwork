@@ -17,8 +17,8 @@ public class CourseCRUD {
 
         System.out.print("""
                 
-                Menu
-                ========
+                Course menu
+                =======================
                 0. Go back to main menu
                 1. Add new course
                 2. Show all courses

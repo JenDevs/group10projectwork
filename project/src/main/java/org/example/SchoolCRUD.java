@@ -16,8 +16,8 @@ public class SchoolCRUD {
             try {
         System.out.print("""
                 
-                Menu
-                ========
+                School menu
+                =======================
                 0. Go back to main menu
                 1. Add new school
                 2. Show all schools
@@ -141,4 +141,3 @@ public class SchoolCRUD {
         });
     }
 }
-
