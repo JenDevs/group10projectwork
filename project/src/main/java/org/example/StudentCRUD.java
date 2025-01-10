@@ -13,24 +13,24 @@ public class StudentCRUD {
 
     public static Scanner scanner = new Scanner(System.in);
 
-    public void studentCRUDMenu(){
+    public void studentCRUDMenu() {
 
         boolean inSubMenu = true;
         while (inSubMenu) {
-                try {
+            try {
 
-            System.out.print(
-                """
-                
-                Student menu
-                =======================
-                0. Go back to main menu
-                1. Add new student
-                2. Show all students
-                3. Update a student
-                4. Delete a student
-                
-                """);
+                System.out.print(
+                        """
+                                
+                                Student menu
+                                =======================
+                                0. Go back to main menu
+                                1. Add new student
+                                2. Show all students
+                                3. Update a student
+                                4. Delete a student
+                                
+                                """);
 
                 System.out.println("Make a choice");
                 String input = scanner.nextLine();
@@ -48,22 +48,26 @@ public class StudentCRUD {
                         System.out.println("Exiting");
                         inSubMenu = false;
                         break;
-                    case 1: insertStudent();
+                    case 1:
+                        insertStudent();
                         break;
-                    case 2: showAllStudents();
+                    case 2:
+                        showAllStudents();
                         break;
-                    case 3: updateStudent();
+                    case 3:
+                        updateStudent();
                         break;
-                    case 4:deleteStudent();
+                    case 4:
+                        deleteStudent();
                         break;
                     default:
                         System.out.println("Invalid choice, please try again");
                         break;
                 }
 
-                } catch (Exception e) {
-                    System.out.println("An unexpected error occurred" + e.getMessage());
-                }
+            } catch (Exception e) {
+                System.out.println("An unexpected error occurred" + e.getMessage());
+            }
         }
 
     }
@@ -90,7 +94,7 @@ public class StudentCRUD {
 
         JPAUtil.inTransaction(em -> {
             Course course = em.createQuery("SELECT c FROM Course c WHERE c.courseName = :courseName", Course.class)
-                    .setParameter("courseName",courseName )
+                    .setParameter("courseName", courseName)
                     .getResultStream()
                     .findFirst()
                     .orElse(null);
@@ -105,23 +109,6 @@ public class StudentCRUD {
         });
     }
 
-    public void showAllStudents2(){
-        EntityManager em = JPAUtil.getEntityManager();
-
-        TypedQuery<Student> query = em.createQuery("SELECT s FROM Student s ", Student.class);
-
-        List<Student> students = query.getResultList();
-
-        String format = "%-20s %-20s %-10s%n";
-        System.out.printf(format, "Name", "Birthday", "Gender");
-        System.out.println("--------------------------------------------------");
-
-        for (Student student : students) {
-            System.out.printf(format, student.getStudentName(), student.getStudentBirthday(), student.getStudentGender());
-        }
-
-        em.close();
-    }
     public void showAllStudents() {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -153,7 +140,7 @@ public class StudentCRUD {
         String oldStudentName = scanner.nextLine();
 
         JPAUtil.inTransaction(em -> {
-            Student student = em.createQuery("SELECT s FROM Student s WHERE s.studentName = :studentName", Student.class )
+            Student student = em.createQuery("SELECT s FROM Student s WHERE s.studentName = :studentName", Student.class)
                     .setParameter("studentName", oldStudentName)
                     .getResultStream()
                     .findFirst()
@@ -165,7 +152,23 @@ public class StudentCRUD {
                 System.out.println("Enter the gender for the student");
                 String newGender = scanner.nextLine();
                 student.setStudentGender(newGender);
-                System.out.println(Student.class.getSimpleName() + " with name " + oldStudentName + " updated");
+                System.out.println("Enter the course for the student");
+                String newCourseName = scanner.nextLine();
+
+
+                Course course = em.
+                        createQuery("SELECT c FROM Course c WHERE c.courseName = :courseName", Course.class)
+                        .setParameter("courseName", newCourseName)
+                        .getResultStream()
+                        .findFirst()
+                        .orElse(null);
+                if (course != null) {
+                    student.setStudentCourseId(course);
+                    em.persist(student);
+                    System.out.println(Student.
+                            class.getSimpleName() + " with name " + oldStudentName + " updated");
+                }
+
             } else {
                 System.out.println(Student
                         .class.getSimpleName() + " with name " + oldStudentName + " not found");
@@ -174,21 +177,21 @@ public class StudentCRUD {
     }
 
 
-    public void deleteStudent(){
+    public void deleteStudent() {
         System.out.println("Enter the name of the student you want to delete");
         String studentName = scanner.nextLine();
 
         JPAUtil.inTransaction(em -> {
-        Student student = em.createQuery("SELECT s FROM Student s WHERE s.studentName = :studentName", Student.class)
-                .setParameter("studentName", studentName)
-                .getResultStream()
-                .findFirst()
-                .orElse(null);
+            Student student = em.createQuery("SELECT s FROM Student s WHERE s.studentName = :studentName", Student.class)
+                    .setParameter("studentName", studentName)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
 
             if (student != null) {
                 em.remove(student);
 
-                System.out.println(Student.class.getSimpleName() + " " + studentName + " deleted." );
+                System.out.println(Student.class.getSimpleName() + " " + studentName + " deleted.");
             } else {
                 System.out.println(Student.class.getSimpleName() + " " + studentName + " not found.");
             }
