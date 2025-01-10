@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
@@ -104,7 +105,7 @@ public class StudentCRUD {
         });
     }
 
-    public void showAllStudents(){
+    public void showAllStudents2(){
         EntityManager em = JPAUtil.getEntityManager();
 
         TypedQuery<Student> query = em.createQuery("SELECT s FROM Student s ", Student.class);
@@ -120,6 +121,31 @@ public class StudentCRUD {
         }
 
         em.close();
+    }
+    public void showAllStudents() {
+        EntityManager em = JPAUtil.getEntityManager();
+
+        TypedQuery<Student> query = em.createQuery("SELECT s FROM Student s", Student.class);
+
+        List<Student> students = query.getResultList();
+
+        String format = "%-20s %-10s %-10s%n";
+        System.out.printf(format, "Name", "Age", "Gender");
+        System.out.println("---------------------------------------");
+
+        for (Student student : students) {
+            int age = calculateAge(student.getStudentBirthday());
+            System.out.printf(format, student.getStudentName(), age, student.getStudentGender());
+        }
+
+        em.close();
+    }
+
+    private int calculateAge(LocalDate birthDate) {
+        if (birthDate == null) {
+            return 0;
+        }
+        return Period.between(birthDate, LocalDate.now()).getYears();
     }
 
     private void updateStudent() {
